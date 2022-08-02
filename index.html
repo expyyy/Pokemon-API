@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <title>Pokemon - PokeAPI</title>
+	 <link rel="stylesheet" href="css/style.css" type="text/css" />
+	 <link rel="stylesheet" href="css/reset.css" type="text/css" >
+	 <link rel="stylesheet" href="css/main.css"  type="text/css" >
+</head>
+<body>
+ <main class="container">
+
+    <div class="wrapper">
+	
+    <div class="content">
+	
+	<img width="638px" height="359px" src="img/logo.png" class="logo" alt="pokemon-logo">
+      <h1 class="primary-title">Pesquise abaixo as informações do seu Pokemon</h1>
+	  <main style="border: 2px solid #f00; width: 550px;">
+        <div class="pesquisar">
+            <input class="text-field" id="pesquisar" type="text" placeholder="Pesquisar o seu Pokemon"/>
+            <button id="button1" class="text-field" onclick="pesquisarPknm()">Pesquisar</button>
+        </div>
+		<p>Seu pokemon aparecerá aqui em baixo!</p>
+        <div id="pokemon"/>
+		<br><br>
+    </div>
+	</main>
+	</div>
+	</main>
+</body>
+
+<script>
+var pesquisarInput=document.getElementById("pesquisar");
+var resultadopokemon=document.getElementById("pokemon");
+
+function pesquisarPknm(){
+    var pesquisarValue=pesquisarInput.value;
+    resultadopokemon.innerHTML=`<p>Carregando...</p>`
+    fetch(`https://pokeapi.co/api/v2/pokemon/${pesquisarValue.toLowerCase()}`).then((result)=>{
+        
+        return (result.json())
+    }
+    ).then(poke=>{
+        console.log(poke);
+        resultadopokemon.innerHTML=`
+        <div "">
+            <div class="column sprite">
+                <img src="${poke.sprites.front_default}"/>
+            </div>
+        <div class="card column" id="${poke.types[0].type.name}">
+            <h1 class="title">#${poke.id.toString().padStart(3,'0')} ${poke.name.charAt(0).toUpperCase() + poke.name.substr(1).toLowerCase()}</h1>
+            <p>${poke.types[0].type.name.charAt(0).toUpperCase() + poke.types[0].type.name.substr(1).toLowerCase()}</p>
+            <h1 style="font-size: 16px;" class="title">Estatísticas</h1>
+            <div class="stats-table">
+                    <div class="stats-element">
+                        <h3 style="font-size: 16px;" >Vida:${poke.stats[0].base_stat}</h3>
+                    </div>
+                    <div class="stats-element">
+                        <h3 style="font-size: 16px;">Velocidade de Ataque:${poke.stats[3].base_stat}</h3>
+                    </div>
+                    <div class="stats-element">
+                        <h3 style="font-size: 16px;">Dano:${poke.stats[1].base_stat}</h3>
+                    </div>
+                    <div class="stats-element">
+                        <h3 style="font-size: 16px;">Escudo:${poke.stats[4].base_stat}</h3>
+                    </div>
+                    <div class="stats-element">
+                        <h3 style="font-size: 16px;">Defesa:${poke.stats[2].base_stat}</h3>
+                    </div>
+                    <div class="stats-element">
+                        <h3 style="font-size: 16px;">Velocidade:${poke.stats[5].base_stat}</h3>
+                    </div>
+
+            </table>
+        </div>
+    </div>
+        `
+    }).catch(error=>{
+        console.log(error)
+        resultadopokemon.innerHTML=`<p>Tente novamente...</p>`
+    });
+}
+</script>
+</html>
